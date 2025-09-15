@@ -5,13 +5,25 @@ void dump_file_struct(FILE *f);
 int main(int argc, char *argv[]) {
   unsigned char byte = 0;
   unsigned char buffer[4];
-  FILE *fin = 0;
+  FILE *fin = NULL;
+  FILE *to_write = NULL;
   int i = 0;
+  unsigned char data[] = {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
 
   if (argc != 2) {
     fprintf(stderr, "incorrect cli args\n");
     return 1;
   }
+
+  to_write = fopen(argv[1], "wb");
+  if (to_write == NULL) {
+    fprintf(stderr, "error opening the file\n");
+    return 1;
+  }
+
+  fwrite(data, sizeof(unsigned char), sizeof(data), to_write);
+
+  fclose(to_write);
 
   fin = fopen(argv[1], "rb");
   if (fin == NULL) {
