@@ -94,7 +94,7 @@ int main(void) {
     retry = 0;
     user_input = readline("shell login: ");
     if (user_input == NULL) {
-      continue;
+      break;
     }
 
     len = trim_string(user_input);
