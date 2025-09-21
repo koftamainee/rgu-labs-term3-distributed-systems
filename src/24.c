@@ -37,9 +37,25 @@ int main(int argc, char *argv[]) {
   size_t target_dirs_count = 0;
   err_t err = 0;
   int i = 0;
+  char *endptr;
 
-  g_recmin = strtoull(argv[1], NULL, 10);
-  g_recmax = strtoull(argv[2], NULL, 10);
+  g_recmin = strtoull(argv[1], &endptr, 10);
+
+  if (*endptr != '\0') {
+    fprintf(stderr, "Invalid recmin: %s\n", argv[1]);
+    return INVALID_CLI_ARGUMENT;
+  }
+
+  g_recmax = strtoull(argv[2], &endptr, 10);
+  if (*endptr != '\0') {
+    fprintf(stderr, "Invalid recmax: %s\n", argv[2]);
+    return INVALID_CLI_ARGUMENT;
+  }
+
+  if (g_recmin > g_recmax) {
+    fprintf(stderr, "recmin cannot be greater than recmax\n");
+    return INVALID_CLI_ARGUMENT;
+  }
 
   err = hash_table_init(&g_seen, keys_comparer, hash_file_key, sizeof(file_key),
                         sizeof(int), free);
