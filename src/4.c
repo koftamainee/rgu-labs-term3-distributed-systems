@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
         result ^= val;
       }
     }
-    printf("%u\n", result);
+    printf("%X\n", result);
   } else if (strcmp(argv[2], "mask") == 0) {
     if (argc < 4) {
       fprintf(stderr, "mask mode requires hex mask argument\n");
