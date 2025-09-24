@@ -1,10 +1,11 @@
+#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define MAX_PATH_LEN 1024
+#define MAX_PATH_LEN 1025
 
 typedef struct {
   char filename[MAX_PATH_LEN];
@@ -15,6 +16,7 @@ int search_string_in_file(const char *filename, const char *str);
 void fork_bomb(int height, int level);
 
 int main(int argc, char *argv[]) {
+  printf("%d\n", PIPE_BUF);
   if (argc != 3) {
     fprintf(stderr, "Usage: %s <file_list.txt> <search_string>\n", argv[0]);
     return EXIT_FAILURE;
@@ -40,22 +42,28 @@ int main(int argc, char *argv[]) {
   while (fgets(filepath, sizeof(filepath), list_file)) {
     filepath[strcspn(filepath, "\n")] = '\0';
 
+    printf("filepath: %s\n", filepath);
+
     pid_t pid = fork();
     if (pid < 0) {
       fprintf(stderr, "fork failed\n");
       close(pipefd[0]);
       close(pipefd[1]);
+
       return EXIT_FAILURE;
     }
 
     if (pid == 0) {
       close(pipefd[0]);
       result r;
+      // printf("from fork: %s\n", filepath);
+      sleep(1);
       strncpy(r.filename, filepath, MAX_PATH_LEN - 1);
-      r.count = search_string_in_file(filepath, search_str);
+      r.count = search_string_in_file(r.filename, search_str);
 
       write(pipefd[1], &r, sizeof(result));
       close(pipefd[1]);
+      fclose(list_file);
       exit(0);
     }
   }

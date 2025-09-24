@@ -1,5 +1,4 @@
 files/23.txt
-files/file_10.txt
 files/file_1.txt
 files/file_2.txt
 files/file_3.txt

@@ -1,7 +1,7 @@
 SRC_DIR := src
 BUILD_DIR := build
 CC := clang
-CFLAGS := -Wall -Wextra -O2
+CFLAGS := -Wall -Wextra
 DEBUGGER_CMD := pwndbg
 ARGS := # Arguments to pass to run/valgrind
 
