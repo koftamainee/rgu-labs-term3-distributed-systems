@@ -56,6 +56,34 @@ clean:
 	$(Q)echo "Cleaning build artifacts..."
 	$(Q)rm -rf $(BUILD_DIR)
 
+build_server_client:
+	@if [ -z "$(TASK)" ]; then \
+		echo "Error: TASK is not set. Usage: make server-client TASK=<n>"; \
+		exit 1; \
+	fi
+	$(Q)mkdir -p $(BUILD_DIR)/$(TASK)
+	$(Q)echo "Compiling $(SRC_DIR)/$(TASK)_server.c -> $(BUILD_DIR)/$(TASK)/server"
+	$(Q)$(CC) $(CFLAGS) -o $(BUILD_DIR)/$(TASK)/server $(SRC_DIR)/$(TASK)_server.c
+	$(Q)echo "Compiling $(SRC_DIR)/$(TASK)_client.c -> $(BUILD_DIR)/$(TASK)/client"
+	$(Q)$(CC) $(CFLAGS) -o $(BUILD_DIR)/$(TASK)/client $(SRC_DIR)/$(TASK)_client.c
+	$(Q)echo "Build complete: $(BUILD_DIR)/$(TASK)/server and $(BUILD_DIR)/$(TASK)/client"
+
+run_server: build_server_client
+	@if [ -z "$(TASK)" ]; then \
+		echo "Error: TASK is not set. Usage: make run-server TASK=<n>"; \
+		exit 1; \
+	fi
+	$(Q)echo "Running server for TASK=$(TASK)..."
+	$(Q)./$(BUILD_DIR)/$(TASK)/server $(ARGS)
+
+run_client: build_server_client
+	@if [ -z "$(TASK)" ]; then \
+		echo "Error: TASK is not set. Usage: make run-client TASK=<n>"; \
+		exit 1; \
+	fi
+	$(Q)echo "Running client for TASK=$(TASK)..."
+	$(Q)./$(BUILD_DIR)/$(TASK)/client $(ARGS)
+
 help:
 	$(Q)echo "Laboratory Works Build System"
 	$(Q)echo "Targets:"
