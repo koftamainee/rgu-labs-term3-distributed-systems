@@ -17,6 +17,8 @@ int main() {
   pid_t pid = fork();
   if (pid < 0) {
     perror("fork");
+    close(pipefd[0]);
+    close(pipefd[1]);
     return EXIT_FAILURE;
   }
 

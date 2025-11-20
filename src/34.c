@@ -233,7 +233,7 @@ int child_process(int idx, int process_count, char **fifo_paths,
       for (int i = 0; i < new_num_alive; i++) {
         msg.alive[i] = new_alive[i];
       }
-      msg.count = msg.num_alive != 1 ? step : 0;
+      msg.count = msg.num_alive != 1 ? step - 1 : 0;
 
       int w = write(fd_out, &msg, sizeof(msg));
       if (w != sizeof(msg)) {

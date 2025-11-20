@@ -9,7 +9,15 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Server: Specify pipe_path\n");
     return 1;
   }
-  unlink(argv[1]);
+  // unlink(argv[1]);
+
+  struct stat s;
+  if (stat(argv[1], &s) == 0) {
+    perror("file exists");
+    // s.st_mode check if fifo
+    return 1;
+  }
+
   if (mkfifo(argv[1], 0600) < 0) {
     perror("mkfifo");
     return 1;
